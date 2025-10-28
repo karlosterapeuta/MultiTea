@@ -91,7 +91,7 @@ const Login = () => {
                     const { error } = await supabase.auth.signUp({
                       email,
                       password,
-                      options: { emailRedirectTo: import.meta.env.VITE_SUPABASE_REDIRECT_URL || window.location.origin },
+                      options: { emailRedirectTo: import.meta.env.VITE_SUPABASE_REDIRECT_URL || (window.location.hostname === 'localhost' ? 'http://localhost:8080' : 'https://sistemamultitea.netlify.app') },
                     });
                     if (error) setSubmitError(error.message);
                   }
@@ -140,7 +140,7 @@ const Login = () => {
                 try {
                   await supabase.auth.signInWithOAuth({
                     provider: 'google',
-                    options: { redirectTo: import.meta.env.VITE_SUPABASE_REDIRECT_URL || window.location.origin }
+                    options: { redirectTo: import.meta.env.VITE_SUPABASE_REDIRECT_URL || (window.location.hostname === 'localhost' ? 'http://localhost:8080' : 'https://sistemamultitea.netlify.app') }
                   });
                 } catch (e) {
                   console.error('Erro ao iniciar login Google', e);

@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 // Usando variáveis de ambiente para maior segurança
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://sevmikmsxlrbrsdvxoux.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNldm1pa21zeGxyYnJzZHZ4b3V4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NjI1NDEsImV4cCI6MjA3NzIzODU0MX0.YOf30m-APjYWNVTEDC3L3cYsPXaA8KTmIMlc-6QU6oU';
+const SUPABASE_REDIRECT_URL = import.meta.env.VITE_SUPABASE_REDIRECT_URL || (window.location.hostname === 'localhost' ? 'http://localhost:8080' : 'https://sistemamultitea.netlify.app');
 
 console.log('Supabase config:', { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY });
 
