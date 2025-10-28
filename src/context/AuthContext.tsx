@@ -112,6 +112,12 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     let mounted = true;
+    const safetyTimer = setTimeout(() => {
+      if (mounted) {
+        console.warn('[Auth] Safety timeout reached. Forcing loading=false');
+        setLoading(false);
+      }
+    }, 3000);
 
     const initializeAuth = async () => {
       if (!mounted) return;
@@ -180,6 +186,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     return () => {
       mounted = false;
       subscription.unsubscribe();
+      clearTimeout(safetyTimer);
     };
   }, [fetchProfile, navigate]);
 
