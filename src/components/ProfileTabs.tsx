@@ -133,8 +133,7 @@ export const ProfileTabs = ({
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit((data) => {
-                console.log('Form submitted with data:', data);
-                const updatedProfileData = {
+                onProfileUpdate({
                   firstName: data.firstName,
                   lastName: data.lastName,
                   email: data.email,
@@ -142,10 +141,8 @@ export const ProfileTabs = ({
                   address: data.address,
                   specialty: data.specialty,
                   crp: data.crp,
-                  avatarUrl: profileData.avatarUrl // Use the prop's avatarUrl
-                };
-                console.log('Calling onProfileUpdate with:', updatedProfileData);
-                onProfileUpdate(updatedProfileData);
+                  avatarUrl: profileData.avatarUrl
+                });
               })} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="firstName" render={({ field }) => (<FormItem><FormLabel>Nome</FormLabel><FormControl><Input {...field} disabled={!isEditing} /></FormControl><FormMessage /></FormItem>)} />
