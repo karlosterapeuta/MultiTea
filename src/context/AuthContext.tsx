@@ -30,13 +30,58 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const ensureProfileExists = useCallback(async (currentUser: any) => {
+    try {
+      const { data, error, status } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', currentUser.id)
+        .single();
+
+      if ((error && status === 406) || (!data && !error)) {
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert({ id: currentUser.id });
+        if (insertError) {
+          console.error('Error creating profile:', insertError);
+        }
+      }
+    } catch (e) {
+      console.error('Unexpected error ensuring profile exists:', e);
+    }
+  }, []);
+
   const fetchProfile = useCallback(async (currentUser: any) => {
     try {
-      const { data, error } = await supabase
+      const { data, error, status } = await supabase
         .from('profiles')
         .select('id, first_name, last_name, specialty, crp, phone, address, avatar_url')
         .eq('id', currentUser.id)
         .single();
+
+      if (error && status === 406) {
+        await ensureProfileExists(currentUser);
+        const { data: created } = await supabase
+          .from('profiles')
+          .select('id, first_name, last_name, specialty, crp, phone, address, avatar_url')
+          .eq('id', currentUser.id)
+          .single();
+        if (created) {
+          setProfile({
+            id: created.id,
+            firstName: created.first_name,
+            lastName: created.last_name,
+            specialty: created.specialty,
+            crp: created.crp,
+            phone: created.phone,
+            address: created.address,
+            avatarUrl: created.avatar_url,
+          });
+        } else {
+          setProfile(null);
+        }
+        return;
+      }
 
       if (error) {
         console.error('Error fetching profile:', error);
@@ -57,7 +102,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
       console.error('Unexpected error fetching profile:', error);
       setProfile(null);
     }
-  }, []);
+  }, [ensureProfileExists]);
 
   const refreshProfile = useCallback(async () => {
     if (user) {
@@ -86,6 +131,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
         if (currentSession && mounted) {
           setSession(currentSession);
           setUser(currentSession.user);
+          await ensureProfileExists(currentSession.user);
           await fetchProfile(currentSession.user);
         }
         
@@ -111,6 +157,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
       setUser(currentUser);
 
       if (currentUser) {
+        await ensureProfileExists(currentUser);
         await fetchProfile(currentUser);
       } else {
         setProfile(null);
