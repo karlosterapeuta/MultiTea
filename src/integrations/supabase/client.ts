@@ -14,12 +14,15 @@ if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
   console.error('VITE_SUPABASE_URL:', SUPABASE_URL);
   console.error('VITE_SUPABASE_ANON_KEY:', SUPABASE_PUBLISHABLE_KEY);
   
-  // Criando um cliente mock para evitar quebras
+  // Criando um cliente mock completo para evitar quebras
   supabase = {
     auth: {
       onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
       getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-      signOut: () => Promise.resolve({ error: null })
+      signOut: () => Promise.resolve({ error: null }),
+      signUp: () => Promise.resolve({ data: { user: null, session: null }, error: { message: 'Supabase não configurado' } }),
+      signInWithPassword: () => Promise.resolve({ data: { user: null, session: null }, error: { message: 'Supabase não configurado' } }),
+      signInWithOAuth: () => Promise.resolve({ data: { provider: null, url: null }, error: { message: 'Supabase não configurado' } })
     }
   };
 } else {
@@ -35,6 +38,7 @@ if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
         }
       }
     );
+    console.log('Cliente Supabase inicializado com sucesso');
   } catch (e) {
     console.error('Erro ao inicializar o cliente Supabase:', e);
     // Fallback para evitar quebras
@@ -42,7 +46,10 @@ if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
       auth: {
         onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
         getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-        signOut: () => Promise.resolve({ error: null })
+        signOut: () => Promise.resolve({ error: null }),
+        signUp: () => Promise.resolve({ data: { user: null, session: null }, error: { message: 'Erro na inicialização do Supabase' } }),
+        signInWithPassword: () => Promise.resolve({ data: { user: null, session: null }, error: { message: 'Erro na inicialização do Supabase' } }),
+        signInWithOAuth: () => Promise.resolve({ data: { provider: null, url: null }, error: { message: 'Erro na inicialização do Supabase' } })
       }
     };
   }
