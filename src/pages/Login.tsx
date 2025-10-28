@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
@@ -9,6 +9,12 @@ import { Logo } from "@/components/Logo";
 const Login = () => {
   const { session, loading } = useAuth();
   const navigate = useNavigate();
+
+  const [mode, setMode] = useState<'signin' | 'signup'>("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     if (session) {
@@ -59,15 +65,82 @@ const Login = () => {
             </p>
           </div>
           <div className="grid gap-4">
+            <div className="flex rounded-md border overflow-hidden">
+              <button
+                type="button"
+                className={`flex-1 py-2 ${mode === 'signin' ? 'bg-black text-white' : ''}`}
+                onClick={() => { setSubmitError(null); setMode('signin'); }}
+              >Entrar</button>
+              <button
+                type="button"
+                className={`flex-1 py-2 ${mode === 'signup' ? 'bg-black text-white' : ''}`}
+                onClick={() => { setSubmitError(null); setMode('signup'); }}
+              >Cadastrar</button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setSubmitError(null);
+                setSubmitLoading(true);
+                try {
+                  if (mode === 'signin') {
+                    const { error } = await supabase.auth.signInWithPassword({ email, password });
+                    if (error) setSubmitError(error.message);
+                  } else {
+                    const { error } = await supabase.auth.signUp({
+                      email,
+                      password,
+                      options: { emailRedirectTo: import.meta.env.VITE_SUPABASE_REDIRECT_URL || window.location.origin },
+                    });
+                    if (error) setSubmitError(error.message);
+                  }
+                } catch (err: any) {
+                  setSubmitError(err?.message || 'Erro de autenticação');
+                } finally {
+                  setSubmitLoading(false);
+                }
+              }}
+              className="grid gap-3"
+            >
+              <div className="grid gap-2">
+                <label className="text-sm font-medium">Email</label>
+                <input
+                  type="email"
+                  className="border rounded-md px-3 py-2"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <label className="text-sm font-medium">Senha</label>
+                <input
+                  type="password"
+                  className="border rounded-md px-3 py-2"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  minLength={6}
+                  required
+                />
+              </div>
+              {submitError && <p className="text-sm text-red-600">{submitError}</p>}
+              <button
+                type="submit"
+                className="mt-1 bg-black text-white rounded-md py-2 disabled:opacity-60"
+                disabled={submitLoading}
+              >
+                {submitLoading ? (mode === 'signin' ? 'Entrando...' : 'Cadastrando...') : (mode === 'signin' ? 'Entrar' : 'Cadastrar')}
+              </button>
+            </form>
+
             <button
               type="button"
               onClick={async () => {
                 try {
                   await supabase.auth.signInWithOAuth({
                     provider: 'google',
-                    options: {
-                      redirectTo: import.meta.env.VITE_SUPABASE_REDIRECT_URL || window.location.origin,
-                    }
+                    options: { redirectTo: import.meta.env.VITE_SUPABASE_REDIRECT_URL || window.location.origin }
                   });
                 } catch (e) {
                   console.error('Erro ao iniciar login Google', e);
@@ -78,39 +151,6 @@ const Login = () => {
             >
               Entrar com Google
             </button>
-
-            <Auth
-              supabaseClient={supabase}
-              appearance={{ theme: ThemeSupa }}
-              providers={[]}
-              magicLink={false}
-              onlyThirdPartyProviders={false}
-              theme="light"
-              redirectTo={import.meta.env.VITE_SUPABASE_REDIRECT_URL || window.location.origin}
-              localization={{
-                variables: {
-                  sign_in: {
-                    email_label: 'Seu email',
-                    password_label: 'Sua senha',
-                    button_label: 'Entrar',
-                    social_provider_text: 'Entrar com {{provider}}',
-                    link_text: 'Já tem uma conta? Entre',
-                  },
-                  sign_up: {
-                    email_label: 'Seu email',
-                    password_label: 'Sua senha',
-                    button_label: 'Cadastrar',
-                    social_provider_text: 'Cadastrar com {{provider}}',
-                    link_text: 'Não tem uma conta? Cadastre-se',
-                  },
-                  forgotten_password: {
-                    email_label: 'Seu email',
-                    button_label: 'Enviar instruções',
-                    link_text: 'Esqueceu sua senha?',
-                  },
-                },
-              }}
-            />
           </div>
         </div>
       </div>
