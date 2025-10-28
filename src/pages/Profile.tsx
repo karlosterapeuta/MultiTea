@@ -478,17 +478,18 @@ const Profile = () => {
       console.log("Tentando atualizar perfil:", data);
       console.log("User ID:", user.id);
       
+      // Usar upsert para garantir que funcione (insert ou update)
       const { error } = await supabase
         .from('profiles')
-        .update({ 
+        .upsert({ 
+          id: user.id,
           first_name: data.firstName, 
           last_name: data.lastName, 
           phone: data.phone, 
           address: data.address, 
           specialty: data.specialty, 
           crp: data.crp 
-        })
-        .eq('id', user.id);
+        });
       
       if (error) {
         console.error("Erro do Supabase:", error);

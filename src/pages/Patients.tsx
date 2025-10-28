@@ -54,18 +54,27 @@ const Patients = () => {
       return;
     }
 
-    const { data, error } = await supabase
-      .from("patients")
-      .insert([{ ...patientData, user_id: user.id }])
-      .select()
-      .single();
+    console.log("Tentando adicionar paciente:", patientData);
+    console.log("User ID:", user.id);
 
-    if (error) {
-      toast.error(`Erro ao adicionar paciente: ${error.message}`);
-      console.error("Erro do Supabase:", error);
-    } else if (data) {
-      setPatients((prevPatients) => [...prevPatients, data as Patient].sort((a, b) => a.name.localeCompare(b.name)));
-      toast.success(`Paciente ${patientData.name} adicionado com sucesso!`);
+    try {
+      const { data, error } = await supabase
+        .from("patients")
+        .insert([{ ...patientData, user_id: user.id }])
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Erro do Supabase:", error);
+        toast.error(`Erro ao adicionar paciente: ${error.message}`);
+      } else if (data) {
+        console.log("Paciente adicionado com sucesso:", data);
+        setPatients((prevPatients) => [...prevPatients, data as Patient].sort((a, b) => a.name.localeCompare(b.name)));
+        toast.success(`Paciente ${patientData.name} adicionado com sucesso!`);
+      }
+    } catch (error) {
+      console.error("Erro inesperado ao adicionar paciente:", error);
+      toast.error("Erro inesperado ao adicionar paciente");
     }
   };
 
