@@ -469,8 +469,15 @@ const Profile = () => {
   };
 
   const handleProfileUpdate = async (data: ProfileData) => {
-    if (!user) return;
+    if (!user) {
+      toast.error("Usuário não encontrado");
+      return;
+    }
+    
     try {
+      console.log("Tentando atualizar perfil:", data);
+      console.log("User ID:", user.id);
+      
       const { error } = await supabase
         .from('profiles')
         .update({ 
@@ -484,9 +491,10 @@ const Profile = () => {
         .eq('id', user.id);
       
       if (error) {
+        console.error("Erro do Supabase:", error);
         toast.error("Erro ao atualizar o perfil: " + error.message);
-        console.error(error);
       } else {
+        console.log("Perfil atualizado com sucesso no banco");
         await refreshProfile();
         toast.success("Dados cadastrais atualizados com sucesso!");
         setIsEditing(false);

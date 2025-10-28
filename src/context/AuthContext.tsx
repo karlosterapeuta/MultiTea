@@ -53,6 +53,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
 
   const fetchProfile = useCallback(async (currentUser: any) => {
     try {
+      console.log("Buscando perfil para usuário:", currentUser.id);
       const { data, error, status } = await supabase
         .from('profiles')
         .select('id, first_name, last_name, specialty, crp, phone, address, avatar_url')
@@ -67,6 +68,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
           .eq('id', currentUser.id)
           .single();
         if (created) {
+          console.log("Perfil criado:", created);
           setProfile({
             id: created.id,
             firstName: created.first_name,
@@ -87,6 +89,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
         console.error('Error fetching profile:', error);
         setProfile(null);
       } else if (data) {
+        console.log("Perfil carregado:", data);
         setProfile({
           id: data.id,
           firstName: data.first_name,
