@@ -59,10 +59,30 @@ const Login = () => {
             </p>
           </div>
           <div className="grid gap-4">
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                      redirectTo: import.meta.env.VITE_SUPABASE_REDIRECT_URL || window.location.origin,
+                    }
+                  });
+                } catch (e) {
+                  console.error('Erro ao iniciar login Google', e);
+                  alert('Falha ao iniciar login com Google. Verifique configurações do provedor.');
+                }
+              }}
+              className="w-full border rounded-md py-2"
+            >
+              Entrar com Google
+            </button>
+
             <Auth
               supabaseClient={supabase}
               appearance={{ theme: ThemeSupa }}
-              providers={["google"]}
+              providers={[]}
               magicLink={false}
               onlyThirdPartyProviders={false}
               theme="light"
