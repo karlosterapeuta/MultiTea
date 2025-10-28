@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 228 100% 99%; /* Pastel Lavender Blue */
+    --foreground: 222 28% 17%; /* Dark Navy */
+
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 222 28% 17%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 28% 17%;
+
+    --primary: 174 80% 40%; /* Turquoise */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 13% 91%;
+    --secondary-foreground: 222 28% 17%;
+
+    --muted: 220 13% 91%;
+    --muted-foreground: 215 14% 53%; /* Bluish Gray */
+
+    --accent: 220 13% 91%;
+    --accent-foreground: 222 28% 17%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 13% 88%;
+    --input: 220 13% 88%;
+    --ring: 174 80% 40%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222 28% 17%;
+    --sidebar-primary: 174 80% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 228 100% 98%;
+    --sidebar-accent-foreground: 222 28% 17%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 174 80% 40%;
+  }
+
+  .dark {
+    --background: 222 47% 11%; /* Night Blue */
+    --foreground: 210 40% 96%; /* Off-white */
+
+    --card: 222 28% 17%; /* Slate Blue */
+    --card-foreground: 210 40% 96%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 96%;
+
+    --primary: 174 65% 50%; /* Neon Turquoise */
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 222 28% 22%;
+    --secondary-foreground: 210 40% 96%;
+
+    --muted: 222 28% 22%;
+    --muted-foreground: 215 20% 65%; /* Light Gray */
+
+    --accent: 222 28% 22%;
+    --accent-foreground: 210 40% 96%;
+
+    --destructive: 0 62.8% 50.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 222 28% 25%;
+    --input: 222 28% 25%;
+    --ring: 174 65% 50%;
+    
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 174 65% 50%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 222 28% 17%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 222 28% 25%;
+    --sidebar-ring: 174 65% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
