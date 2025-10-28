@@ -132,7 +132,18 @@ export const ProfileTabs = ({
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onProfileUpdate as any)} className="space-y-4">
+              <form onSubmit={form.handleSubmit((data) => {
+                onProfileUpdate({
+                  firstName: data.firstName,
+                  lastName: data.lastName,
+                  email: data.email,
+                  phone: data.phone,
+                  address: data.address,
+                  specialty: data.specialty,
+                  crp: data.crp,
+                  avatarUrl: profileData.avatarUrl
+                });
+              })} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="firstName" render={({ field }) => (<FormItem><FormLabel>Nome</FormLabel><FormControl><Input {...field} disabled={!isEditing} /></FormControl><FormMessage /></FormItem>)} />
                   <FormField control={form.control} name="lastName" render={({ field }) => (<FormItem><FormLabel>Sobrenome</FormLabel><FormControl><Input {...field} disabled={!isEditing} /></FormControl><FormMessage /></FormItem>)} />
