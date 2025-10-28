@@ -6,10 +6,10 @@ export interface Patient {
   id: string;
   user_id: string;
   name: string;
-  birth_date: string;
-  diagnosis: string;
-  mother_name: string;
-  phone: string;
+  birthdate?: string; // Renomeado de birth_date para birthdate e tornado opcional
+  diagnosis?: string; // Adicionado
+  mother_name?: string; // Adicionado
+  phone?: string; // Adicionado
   avatar_url?: string;
 }
 

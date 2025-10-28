@@ -23,7 +23,7 @@ import { useEffect } from "react";
 
 const patientFormSchema = z.object({
   name: z.string().min(2, { message: "O nome deve ter pelo menos 2 caracteres." }),
-  birth_date: z.string().optional(),
+  birthdate: z.string().optional(), // Renomeado de birth_date para birthdate
   diagnosis: z.string().optional(),
   mother_name: z.string().optional(),
   phone: z.string().optional(),
@@ -42,7 +42,7 @@ export const AddPatientDialog = ({ isOpen, onClose, onAddPatient }: AddPatientDi
     resolver: zodResolver(patientFormSchema),
     defaultValues: {
       name: "",
-      birth_date: "",
+      birthdate: "", // Renomeado aqui também
       diagnosis: "",
       mother_name: "",
       phone: "",
@@ -86,7 +86,7 @@ export const AddPatientDialog = ({ isOpen, onClose, onAddPatient }: AddPatientDi
             />
             <FormField
               control={form.control}
-              name="birth_date"
+              name="birthdate" // Renomeado aqui
               render={({ field }) => (
                 <FormItem className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
                   <FormLabel className="text-left sm:text-right">Nascimento</FormLabel>
