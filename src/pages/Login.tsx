@@ -43,6 +43,19 @@ const Login = () => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: import.meta.env.VITE_SUPABASE_REDIRECT_URL || window.location.origin,
+        }
+      });
+    } catch (err) {
+      console.error('Google sign-in error', err);
+    }
+  };
+
   if (loading) {
     return (
       <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2">
@@ -127,10 +140,18 @@ const Login = () => {
               </div>
             </div>
 
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              className="w-full border rounded-md py-2"
+            >
+              Entrar com Google
+            </button>
+
             <Auth
               supabaseClient={supabase}
               appearance={{ theme: ThemeSupa }}
-              providers={["github"]}
+              providers={["github","google"]}
               magicLink={false}
               onlyThirdPartyProviders={false}
               theme="light"
