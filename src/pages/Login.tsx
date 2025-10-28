@@ -61,6 +61,8 @@ const Login = () => {
               supabaseClient={supabase}
               appearance={{ theme: ThemeSupa }}
               providers={["github"]}
+              magicLink={false}
+              onlyThirdPartyProviders={false}
               theme="light"
               redirectTo={import.meta.env.VITE_SUPABASE_REDIRECT_URL || window.location.origin}
               localization={{
