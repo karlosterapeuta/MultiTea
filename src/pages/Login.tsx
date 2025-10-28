@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
@@ -16,45 +16,7 @@ const Login = () => {
     }
   }, [session, navigate]);
 
-  const [signupEmail, setSignupEmail] = useState("");
-  const [signupPassword, setSignupPassword] = useState("");
-  const [signupLoading, setSignupLoading] = useState(false);
-  const [signupError, setSignupError] = useState<string | null>(null);
-
-  const handleEmailSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSignupError(null);
-    setSignupLoading(true);
-    try {
-      const { error } = await supabase.auth.signUp({
-        email: signupEmail,
-        password: signupPassword,
-        options: {
-          emailRedirectTo: import.meta.env.VITE_SUPABASE_REDIRECT_URL || window.location.origin,
-        },
-      });
-      if (error) {
-        setSignupError(error.message);
-      }
-    } catch (err: any) {
-      setSignupError(err?.message || "Erro ao cadastrar");
-    } finally {
-      setSignupLoading(false);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    try {
-      await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: import.meta.env.VITE_SUPABASE_REDIRECT_URL || window.location.origin,
-        }
-      });
-    } catch (err) {
-      console.error('Google sign-in error', err);
-    }
-  };
+  
 
   if (loading) {
     return (
@@ -97,61 +59,10 @@ const Login = () => {
             </p>
           </div>
           <div className="grid gap-4">
-            <form onSubmit={handleEmailSignup} className="grid gap-3">
-              <div className="grid gap-2">
-                <label className="text-sm font-medium">Email</label>
-                <input
-                  type="email"
-                  className="border rounded-md px-3 py-2"
-                  value={signupEmail}
-                  onChange={(e) => setSignupEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <label className="text-sm font-medium">Senha</label>
-                <input
-                  type="password"
-                  className="border rounded-md px-3 py-2"
-                  value={signupPassword}
-                  onChange={(e) => setSignupPassword(e.target.value)}
-                  minLength={6}
-                  required
-                />
-              </div>
-              {signupError && (
-                <p className="text-sm text-red-600">{signupError}</p>
-              )}
-              <button
-                type="submit"
-                className="mt-1 bg-black text-white rounded-md py-2 disabled:opacity-60"
-                disabled={signupLoading}
-              >
-                {signupLoading ? "Cadastrando..." : "Cadastrar com email"}
-              </button>
-            </form>
-
-            <div className="relative my-2">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-muted-foreground">ou</span>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleGoogleSignIn}
-              className="w-full border rounded-md py-2"
-            >
-              Entrar com Google
-            </button>
-
             <Auth
               supabaseClient={supabase}
               appearance={{ theme: ThemeSupa }}
-              providers={["github","google"]}
+              providers={["google"]}
               magicLink={false}
               onlyThirdPartyProviders={false}
               theme="light"
